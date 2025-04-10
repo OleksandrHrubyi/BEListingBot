@@ -6,6 +6,10 @@ class TelegramService {
         console.log('Chat ID:', chatId);
         this.bot = new TelegramBot(token);
         this.chatId = chatId;
+        this.bot.onText(/\/status/, (msg) => {
+            const fromChatId = msg.chat.id;
+            this.bot.sendMessage(fromChatId, '🟢 Бот працює нормально', { parse_mode: 'Markdown' });
+        });
       }
     
       async sendMessage(message) {
