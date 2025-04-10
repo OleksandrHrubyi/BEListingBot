@@ -1,0 +1,32 @@
+{
+  "name": "belistingbot",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OleksandrHrubyi/BEListingBot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OleksandrHrubyi/BEListingBot/issues"
+  },
+  "homepage": "https://github.com/OleksandrHrubyi/BEListingBot#readme",
+  "description": "",
+  "dependencies": {
+    "ccxt": "^4.4.73",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "node-cron": "^3.0.3",
+    "node-telegram-bot-api": "^0.66.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
