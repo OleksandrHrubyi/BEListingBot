@@ -1,30 +1,56 @@
-import express, { json } from 'express';
-import { schedule } from 'node-cron';
-import { marketsFile, telegramToken, telegramChatId, port } from './config/index.js';
-import ExchangeService from './services/exchanges.js';
-import TelegramService from './services/telegram.js';
-import apiRoutes from './routes/api.js';
+import dotenv from 'dotenv';
+dotenv.config();
+import { connectDB } from './db.js';
+import TelegramBot from 'node-telegram-bot-api';
+import statusCommand from './commands/status.js';
+import priceCommand from './commands/price.js';
+import balanceCommand from './commands/balance.js';
+import tradeSpot from './commands/tradeSpot.js';
+import tradeFeatures from './commands/tradeFeatures.js';
+import binanceNewsMonitor from './logic/binanceNewsMonitor.js';
+import tradeCallbacks from './callbacks/tradeCallbacks.js';
+import fetchBybitNews from './logic/bybitNewsMonitor.js';
 
-const app = express();
-const exchangeService = new ExchangeService(marketsFile);
-const telegramService = new TelegramService(telegramToken, telegramChatId);
+// Підключення до MongoDB
+await connectDB();
 
-// Middleware
-app.use(json());
+// Запуск бота
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
 
-// Routes
-app.use('/api', apiRoutes(exchangeService));
+const mainMenu = {
+  reply_markup: {
+    keyboard: [
+      ['💼 Balance'],
+      ['📊 Status', '💰 Price'],
+      ['💼 Futures'],
+    ],
+    resize_keyboard: true,
+    one_time_keyboard: false,
+  },
+};
 
-// Періодична перевірка (кожні 5 хвилин)
-schedule('*/5 * * * *', () => {
-  console.log('Перевірка лістингів...');
-  exchangeService.checkListings(telegramService);
+// Показати меню при /start
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, '👋 Вітаю! Обери команду з меню нижче 👇', mainMenu);
 });
 
-// Початкова перевірка
-exchangeService.checkListings(telegramService);
+// Підключення команд
+binanceNewsMonitor(bot);
+statusCommand(bot);
+priceCommand(bot);
+balanceCommand(bot);
+tradeSpot(bot);
+tradeFeatures(bot);
+tradeCallbacks(bot);
+fetchBybitNews()
 
-// Запуск сервера
-app.listen(port, () => {
-  console.log(`Сервер запущено на порту ${port}`);
-});
+// Запуск моніторингу новин від Bybit кожні 10 хвилин
+setInterval(fetchBybitNews, 10 * 60 * 1000); // 10 хвилин
+
+bot.setMyCommands([
+  { command: '/start', description: 'Запустити бота' },
+  { command: '/buy', description: 'Купити монету' },
+  { command: '/sell', description: 'Продати монету' },
+]);
+
+export default bot;
