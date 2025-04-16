@@ -45,7 +45,7 @@ tradeCallbacks(bot);
 fetchBybitNews()
 
 // Запуск моніторингу новин від Bybit кожні 10 хвилин
-setInterval(fetchBybitNews, 10 * 60 * 1000); // 10 хвилин
+setInterval(fetchBybitNews, 1 * 60 * 1000); // 10 хвилин
 
 bot.setMyCommands([
   { command: '/start', description: 'Запустити бота' },

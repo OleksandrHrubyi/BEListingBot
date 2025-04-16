@@ -2,12 +2,14 @@
 import mongoose from 'mongoose';
 
 const delistedCoinSchema = new mongoose.Schema({
-  symbol: { type: String, required: true }, // Наприклад: "TRX"
-  name: { type: String }, // Наприклад: "TRON"
+  title: { type: String, required: true }, // Наприклад: "TRX"
+  currency: { type: String, required: true }, // Наприклад: "TRX"
+  pair: { type: String, required: true }, // Наприклад: "TRXUSDT"
+  url: { type: String },
   exchange: { type: String, required: true }, // Наприклад: "Binance" або "Bybit"
-  reason: { type: String }, // Якщо є причина (optional)
   dateDetected: { type: Date, default: Date.now }, // коли бот виявив
-  delistDate: { type: Date }, // якщо в новині була дата делістингу
+  description: { type: String }, // опис новини
+  name: { type: String }, // назва монети
 });
 
 export const DelistedCoin = mongoose.model('DelistedCoin', delistedCoinSchema);
