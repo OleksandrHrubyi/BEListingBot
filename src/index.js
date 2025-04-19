@@ -42,10 +42,8 @@ balanceCommand(bot);
 tradeSpot(bot);
 tradeFeatures(bot);
 tradeCallbacks(bot);
-fetchBybitNews()
+fetchBybitNews(bot)
 
-// Запуск моніторингу новин від Bybit кожні 10 хвилин
-setInterval(fetchBybitNews, 1 * 60 * 1000); // 10 хвилин
 
 bot.setMyCommands([
   { command: '/start', description: 'Запустити бота' },
@@ -54,3 +52,12 @@ bot.setMyCommands([
 ]);
 
 export default bot;
+import ccxt from 'ccxt';
+async function test(){
+  const exchange = new ccxt.bybit();
+  await exchange.loadMarkets();
+  console.table(Object.keys(exchange?.markets));
+  
+}
+
+test()

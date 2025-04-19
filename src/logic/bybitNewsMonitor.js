@@ -2,12 +2,11 @@ import { DelistedCoin } from '../models/DelistedCoin.js';
 import axios from 'axios';
 import dotenv from "dotenv";
 dotenv.config();
-import bot from '../index.js';
 
 const API_URL =
   "https://api2.bybit.com/announcements/api/search/v1/index/announcement-posts_en";
 
-export default async function fetchBybitNews() {
+export default async function fetchBybitNews(bot) {
   try {
     const { data } = await axios.post(API_URL, {
       query: "",
@@ -56,6 +55,7 @@ export default async function fetchBybitNews() {
         });
 
         const message = 
+        `⚫ <b>BYBIT</b> 🚨\n\n...`+
         `🚨 <b>DELISTING ALERT</b> 🚨\n\n` +
         `💣 <b>${currency}</b>\n` +
         `📉 <b>Пара:</b> <code>${currency}USDT</code>\n` +
@@ -74,7 +74,7 @@ export default async function fetchBybitNews() {
                 [
                   {
                     text: '🔻 Відкрити шорт',
-                    callback_data: `short:${currency}`
+                    callback_data: `short:${currency}:bybit`
                   }
                 ]
               ],
